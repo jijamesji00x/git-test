@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+  </head>
+  <body>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+      }
+    </style>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.js"
+      integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      var datashow;
+      var api1 = "/data";
+      fetch(api1)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          datashow = data;
+          for (let i = 0; i < datashow.length; i++) {
+            $("#coID").append(
+              "<tr>" +
+                "<td>" +
+                datashow[i].country +
+                "</td>" +
+                "<td>" +
+                datashow[i].capital +
+                "</td>" +
+                "</tr>"
+              //"<td>" +datashow[i].capital +"</td>"
+            );
+          }
+          //document.getElementById("coID").innerHTML = datashow[0].country;
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log("error", err);
+        });
+    </script>
+    <table id="coID">
+      <tr>
+        <th>Country</th>
+        <th>Capital</th>
+      </tr>
+    </table>
+  </body>
+</html>
