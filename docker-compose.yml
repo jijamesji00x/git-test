@@ -15,9 +15,9 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "000000"
-      POSTGRES_DB: "pegasus"
-      DATABASE_URL: postgres://postgres@domain.com:000000@phttp://127.0.0.1:5432/pegasus
-      PORT: 3001
+      POSTGRES_DB: "postgres"
+      #DATABASE_URL: postgres://postgres@domain.com:000000@phttp://127.0.0.1:5432/pegasus
+      PORT: "5432"
     ports:
       - "3001:3001"
     networks:
@@ -34,7 +34,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: ""
+      POSTGRES_PASSWORD: "rootUser"
       POSTGRES_DB: "pegasus"
     networks:
       - mybridge_network
