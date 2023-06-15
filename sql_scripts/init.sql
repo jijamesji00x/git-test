@@ -1,4 +1,4 @@
-psql -U postgres;
+
 create database pegasus;
 create table country_and_capitals (country text, capital text);
 
