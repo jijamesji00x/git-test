@@ -2,98 +2,62 @@
 version: "3"
 
 services:
-  #WEB APP
-  web:
-    build: ./frontend
-    ports:
-      - "8080:80"
-    networks:
-      - mybridge_network
-  #API
-  api:
-    build: ./backend
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "000000"
-      POSTGRES_DB: "postgres"
-      #DATABASE_URL: postgres://postgres@domain.com:000000@phttp://127.0.0.1:5432/pegasus
-      PORT: "5432"
-    ports:
-      - "3001:3001"
-    networks:
-      - mybridge_network
-    command: npx nodemon index.js
   # Database
-  db:
+  postgres:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - "./sql_script/init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "./sql_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql"
     restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "rootUser"
-      POSTGRES_DB: "pegasus"
+    env_file:
+      - ./backend/.env
+    # environment:
+    #   - POSTGRES_USER=${POSTGRES_USER}
+    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #   - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - mybridge_network
+  #WEB APP
+  # web:
+  #   build: ./frontend
+  #   ports:
+  #     - "8080:3000"
+  #   networks:
+  #     - mybridge_network
+  #API
+  api:
+    depends_on:
+      - postgres
+    build: ./backend
+    env_file:
+      - ./backend/.env
+
+    # env_file:
+    #   - ./backend/.env
+
+    networks:
+      - mybridge_network
+    # command: npm start
+
     #command: ["sleep", "999"]
     #command: ./docker-entrypoint-initdb.d/init.sql
 
   # pgadmin4
-  pg4:
-    depends_on:
-      - db
-    image: dpage/pgadmin4
-    restart: always
-    ports:
-      - "8081:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "postgres@domain.com"
-      PGADMIN_DEFAULT_PASSWORD: "000000"
-    networks:
-      - mybridge_network
+  # pg4:
+  #   depends_on:
+  #     - db
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "postgres@domain.com"
+  #     PGADMIN_DEFAULT_PASSWORD: "000000"
+  #   networks:
+  #     - mybridge_network
 
 networks:
   mybridge_network:
 
 volumes:
   pgdata:
-# version: "3.8"
-
-# #database
-# services:
-#   db:
-#     image: postgres
-#     restart: always
-#     ports:
-#       - "5432:5432"
-#     environment:
-#       POSTGRES_PASSWORD: "000000"
-#     volumes:
-#       - pgdata:/var/lib/postgresql/data
-#     networks:
-#       - mybridge_network
-
-#   #pgadmin4
-#   pg4:
-#     depends_on:
-#       - db
-#     image: dpage/pgadmin4
-#     restart: always
-#     ports:
-#       - "8080:80"
-#     environment:
-#       PGADMIN_DEFAULT_EMAIL: "user@domain.com"
-#       PGADMIN_DEFAULT_PASSWORD: "000000"
-#     networks:
-#       - mybridge_network
-
-#   networks:
-#     mybridge_network:
-
-#   volumes:
-#     pgdata:
-# #docker run -p 80:80 --name pg4_2 -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' -e 'PGADMIN_DEFAULT_PASSWORD=000000' -d dpage/pgadmin4
-# #docker run --name postgres_db2 -e POSTGRES_PASSWORD=000000 -d -p 5432:5432 -v pgdata:/var/lib/postgresql/data postgres

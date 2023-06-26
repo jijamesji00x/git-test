@@ -6,25 +6,36 @@ const app = express();
 const path = require("path");
 const router = express.Router();
 
+require("dotenv").config();
+
 const { Client } = require("pg");
 const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "postgres",
-  password: "",
-  port: 5432,
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  database: process.env.PGDATABASE,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
 });
 
-client.connect();
+client
+  .connect()
+  .then(() => {
+    console.log("Connected to Postgres!");
+    // Perform database operations
+    // ...
+  })
+  .catch((err) => {
+    console.error("Error connecting to Postgres:", err);
+  });
 
-/*client.query(`Select * from country_and_capitals`, (err, res) => {
+client.query(`Select * from country_and_capitals`, (err, res) => {
   if (!err) {
     console.log(res.rows);
   } else {
     console.log(err.message);
   }
   client.end;
-});*/
+});
 
 /*router.get("/", function (req, res, next) {
   client.query(`Select * from country_and_capitals`, (err, res) => {
@@ -91,4 +102,4 @@ router.get("/data", function (req, res, next) {
 });*/
 app.use("/", router);
 app.listen(3001);
-console.log("server running in port 3001");
+//console.log("server running in port 3001");

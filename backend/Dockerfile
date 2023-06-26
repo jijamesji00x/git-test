@@ -1,8 +1,11 @@
-FROM node:alpine
-RUN mkdir -p /backend
+FROM node:14
+ENV PGHOST=localhost
+ENV PGPORT=5432
+ENV PGDATABASE=postgres
+ENV PGUSER=postgres
+ENV PGPASSWORD=000000
 WORKDIR /backend
-COPY  . /backend
-# COPY ../frontend /backend/
+COPY . .
 RUN npm install
-EXPOSE 3001
+#EXPOSE 3001
 CMD ["npm","start"]
