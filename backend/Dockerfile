@@ -1,5 +1,5 @@
 FROM node:14
-ENV PGHOST=localhost
+ENV PGHOST=db
 ENV PGPORT=5432
 ENV PGDATABASE=postgres
 ENV PGUSER=postgres
